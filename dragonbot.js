@@ -11,6 +11,7 @@ var username = "DragonBot";
 var outputBuffer = [];
 var dragonhealth = 150;
 var hero = "."
+var balance = 0
 socket.on('connect', function(){
 		//Your session key (aka API key)
 		//Get this from your browser's cookies.
@@ -22,44 +23,47 @@ socket.on('connect', function(){
     			socket.emit('joinroom', {join: 'dragonbot'});
     			socket.emit("getbalance", {});
     			socket.on('chat', function(data){ //the program loops this bracket
+                        console.log(data);
     					if (data.message === "!rules" && data.room === "dragonbot") {
-                			socket.emit("chat", {room: "dragonbot", message: data.user + ": Slay the dragon! The dragon initially has 150 health. Each swing reduces the health by a random amount between 0~100, and a 100 point swing instantly kills the dragon! Each swing is exactly 0.25 mBTC."});
+                			socket.emit("chat", {room: data.room, color: "000", message: data.user + ": Slay the dragon! The dragon initially has 150 health. Each swing reduces the health by a random amount between 0~100, and a 100 point swing instantly kills the dragon! Each swing is exactly 0.25 mBTC."});
                 		}
                 		if (data.message === "!balance" && data.room === "dragonbot") {
 							socket.emit("getbalance", {});
-							socket.emit("chat", {room: "dragonbot", message: data.user + ": current balance of bot =" + data.balance});
+							socket.emit("chat", {room: data.room, color: "000", message: data.user + ": current balance of bot = " + data.balance});
                 		}
                 		if (data.message === "!hero" && data.room === "dragonbot") {
-                			socket.emit("chat", {room: "dragonbot", message: data.user + ": the last person to get a critical hit is " + hero + "!"});
+                			socket.emit("chat", {room: data.room, color: "000", message: data.user + ": the last person to get a critical hit is " + hero + "!"});
                 		}
                 		if (data.message === "!health" && data.room === "dragonbot") {
-                			socket.emit("chat", {room: "dragonbot", message: data.user + ": the current health of the dragon is  " + dragonhealth + "!"});
+                			socket.emit("chat", {room: data.room, color: "000", message: data.user + ": the current health of the dragon is  " + dragonhealth + "!"});
                 		}
 						if(contains(data.message, ["<span class='label label-success'>has tipped " + username])){
-							var amount = data.message.split("<span class='label label-success'>has tipped " + username + " ")[1].split(" ")[0];
+							var stringamount = data.message.split("<span class='label label-success'>has tipped " + username + " ")[1].split(" ")[0];
 							var player = data.user;
+                            var amount = Number(stringamount);
 							if(amount === 0.25){
-								socket.emit("chat", {room: "dragonbot", message: data.user + " takes a swing at the Dragon (" + dragonhealth + ") !"});
+								socket.emit("chat", {room: "dragonbot", color: "000", message: data.user + " takes a swing at the Dragon (" + dragonhealth + ") !"});
 								var swing = Math.round(Math.random()*100); //random number from 0 to 0.99999... multiply by 100 and round.
+                                console.log(swing);
 								if(swing === 100){
 									dragonhealth = 150; //reset dragon's health
 									hero = data.user; //set user as hero
-									socket.emit("chat", {room: "dragonbot", message: data.user + " has killed the dragon with a critical hit (100 rolled)!"});
+									socket.emit("chat", {room: "dragonbot", color: "000", message: data.user + " has killed the dragon with a critical hit (100 rolled)!"});
 									prize();//give prize
 								}else{
-									dragonhealth = dragonhealth - swing
-									socket.emit("chat", {room: "dragonbot", message: data.user + " has swung and dealt " + swing + " damage!"});
+									dragonhealth = dragonhealth - swing;
+									socket.emit("chat", {room: "dragonbot", color: "000", message: data.user + " has swung and dealt " + swing + " damage!"});
 									if(dragonhealth <= 0){ //was the dragon killed?
 										dragonhealth = 150; //reset dragon's health
-										socket.emit("chat", {room: "dragonbot", message: data.user + " has killed the dragon!"}); //notify
+										socket.emit("chat", {room: "dragonbot", color: "000", message: data.user + " has killed the dragon!"}); //notify
 										prize();//give prize
 									}else{
 										//state current health if dragon not killed
-										socket.emit("chat", {room: "dragonbot", message: "The dragon now has " + dragonhealth + " health left!"});
+										socket.emit("chat", {room: "dragonbot", color: "000", message: "The dragon now has " + dragonhealth + " health left!"});
 									}
 								}
 							}else{
-								var refamount = amount;
+								var refamount = amount * 0.98;
 								socket.emit("tip", {user: data.user, room: "dragonbot", tip: refamount, message: "refund! A hit costs exactly 0.25"});
 							}
 						}
@@ -116,7 +120,6 @@ socket.on('connect', function(){
     });
     socket.on('disconnect', function(){});
 });
-console.log(data);
 function contains(string, terms){
 	for(var i=0; i<terms.length; i++){
 		if(string.toLowerCase().indexOf(terms[i].toLowerCase()) == -1){
