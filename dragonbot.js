@@ -1,6 +1,6 @@
 //DragonBot
 //In Progress jakedageek
-//latest version 0.0.6 8-6-13
+//latest version 0.0.7 8-7-13
 
 // CoinChat bot
 
@@ -26,7 +26,7 @@ socket.on('connect', function(){
 			socket.on('chat', function(data){ //the program loops this bracket
                 console.log(data);
 				if (data.message === "!rules" && data.room === "dragonbot") {
-        			outputBuffer.push({room: data.room, color: "000", message: data.user + ": Slay the dragon! The dragon initially has 100 health. Each swing reduces the health by a random amount between 0~100, and a 100 point swing instantly kills the dragon! Each swing is exactly 0.25 mBTC. When you kill the dragon, you can get a prize of anywhere from 0.5~1mBTC (weighted)! House Edge: 3.2% (includes tax)"});
+        			outputBuffer.push({room: data.room, color: "000", message: data.user + ": Slay the dragon! The dragon initially has 100 health. Each swing reduces the health by a random amount between 0~100, and a 100 point swing instantly kills the dragon! Each swing is exactly 0.25 mBTC. When you kill the dragon, you can get a prize of anywhere from 0.5~1mBTC (weighted)! If you roll a 100 for the first swing, you get 1mBTC! House Edge: 4.2% (includes tax)"});
         		}
         		if (data.message === "!balance" && data.room === "dragonbot") {
 					socket.emit("getbalance", {});
@@ -49,16 +49,16 @@ socket.on('connect', function(){
 						outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " takes a swing at the Dragon (" + dragonhealth + ") !"});
 						var swing = Math.ceil(Math.random()*100); //random number from 0 to 0.99999... multiply by 100 and round.
                         console.log(swing);
-						if(swing === 100){
-							dragonhealth = 150; //reset dragon's health
+						if(swing === 100 && dragonhealth === 100){
+							dragonhealth = 100; //reset dragon's health
 							hero = data.user; //set user as hero
 							outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has killed the dragon with a critical hit (100 rolled)!"});
-							prize(data.user);//give prize
+							tipBuffer.push({user: prizeuser, room: "dragonbot", tip: 1, message: "Critical Hit!"});
 						}else{
 							dragonhealth = dragonhealth - swing;
 							outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has swung and dealt " + swing + " damage!"});
 							if(dragonhealth <= 0){ //was the dragon killed?
-								dragonhealth = 150; //reset dragon's health
+								dragonhealth = 100; //reset dragon's health
 								outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has killed the dragon!"}); //notify
 								prize(data.user);//give prize
 							}else{
@@ -86,19 +86,19 @@ socket.on('connect', function(){
         function prize(prizeuser){
         	var prizeweight = Math.round(Math.random()*100);
             console.log(prizeweight)
-        	if(prizeweight < (48)){
+        	if(prizeweight < (56)){
         		//give the 0.5~0.6 prize
         		var prizeamount = ((Math.round(Math.random()*100))/1000)+0.5;
         		tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
-        	}else if(prizeweight < 80){
+        	}else if(prizeweight < 83){
     			//give the 0.6~0.7 prize
     			var prizeamount = ((Math.round(Math.random()*100))/1000)+0.6;
     			tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
-        	}else if(prizeweight < 93){
+        	}else if(prizeweight < 97){
     			//give the 0.7~0.8 prize
     			var prizeamount = ((Math.round(Math.random()*100))/1000)+0.7;
     			tipBuffer.push({user: prizeusser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
-        	}else if(prizeweight < (98)){
+        	}else if(prizeweight < (99)){
         		//give the 0.8~0.9 prize
         		var prizeamount = ((Math.round(Math.random()*100))/1000)+0.8;
         		tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
