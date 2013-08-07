@@ -38,6 +38,9 @@ socket.on('connect', function(){
         		if (data.message === "!health" && data.room === "dragonbot") {
         			outputBuffer.push({room: data.room, color: "000", message: data.user + ": the current health of the dragon is  " + dragonhealth + "!"});
         		}
+                if (data.message === "!commands" && data.room === "dragonbot") {
+                    outputBuffer.push({room: data.room, color: "000", message: data.user + ": !rules, !balance, !hero, !health, !commands"});
+                }
 				if(contains(data.message, ["<span class='label label-success'>has tipped " + username])){
                     var stringamount = data.message.split("<span class='label label-success'>has tipped ")[1].split(" ")[1];
                     amount = Number(stringamount);
