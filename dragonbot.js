@@ -26,7 +26,7 @@ socket.on('connect', function(){
 			socket.on('chat', function(data){ //the program loops this bracket
                 console.log(data);
 				if (data.message === "!rules" && data.room === "dragonbot") {
-        			outputBuffer.push({room: data.room, color: "000", message: data.user + ": Slay the dragon! The dragon initially has 125 health. Each swing reduces the health by a random amount between 0~100, and a 100 point swing instantly kills the dragon! Each swing is exactly 0.25 mBTC."});
+        			outputBuffer.push({room: data.room, color: "000", message: data.user + ": Slay the dragon! The dragon initially has 100 health. Each swing reduces the health by a random amount between 0~100, and a 100 point swing instantly kills the dragon! Each swing is exactly 0.25 mBTC. When you kill the dragon, you can get a prize of anywhere from 0.5~1mBTC (weighted)! House Edge: 3.2% (includes tax)"});
         		}
         		if (data.message === "!balance" && data.room === "dragonbot") {
 					socket.emit("getbalance", {});
@@ -39,7 +39,7 @@ socket.on('connect', function(){
         			outputBuffer.push({room: data.room, color: "000", message: data.user + ": the current health of the dragon is  " + dragonhealth + "!"});
         		}
                 if (data.message === "!commands" && data.room === "dragonbot") {
-                    outputBuffer.push({room: data.room, color: "000", message: data.user + ": !rules, !balance, !hero, !health, !commands"});
+                    outputBuffer.push({room: data.room, color: "000", message: data.user + ": !rules, !hero, !health, !commands"});
                 }
 				if(contains(data.message, ["<span class='label label-success'>has tipped " + username])){
                     var stringamount = data.message.split("<span class='label label-success'>has tipped ")[1].split(" ")[1];
