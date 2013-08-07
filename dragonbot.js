@@ -9,6 +9,7 @@ socket = io.connect("https://coinchat.org", {secure: true});
 
 var username = "DragonBot";
 var outputBuffer = [];
+var tipBuffer = [];
 var dragonhealth = 150;
 var hero = "."
 var balance = 0
@@ -49,14 +50,14 @@ socket.on('connect', function(){
 							dragonhealth = 150; //reset dragon's health
 							hero = data.user; //set user as hero
 							outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has killed the dragon with a critical hit (100 rolled)!"});
-							prize();//give prize
+							prize(data.user);//give prize
 						}else{
 							dragonhealth = dragonhealth - swing;
 							outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has swung and dealt " + swing + " damage!"});
 							if(dragonhealth <= 0){ //was the dragon killed?
 								dragonhealth = 150; //reset dragon's health
 								outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has killed the dragon!"}); //notify
-								prize();//give prize
+								prize(data.user);//give prize
 							}else{
 								//state current health if dragon not killed
 								outputBuffer.push({room: "dragonbot", color: "000", message: "The dragon now has " + dragonhealth + " health left!"});
@@ -64,7 +65,7 @@ socket.on('connect', function(){
 						}
 					}else{
 						var refamount = amount * 0.98;
-						socket.emit("tip", {user: data.user, room: "dragonbot", tip: refamount, message: "refund! A hit costs exactly 0.25"});
+						tipBuffer.push({user: data.user, room: "dragonbot", tip: refamount, message: "refund! A hit costs exactly 0.25"});
 					}
 				}
 			});
@@ -74,30 +75,34 @@ socket.on('connect', function(){
     		if(outputBuffer.length > 0){
     			var chat = outputBuffer.splice(0,1)[0];
     			socket.emit("chat", {room: chat.room, message: chat.message, color: "000"});
-    		}
+    		}else if(tipBuffer.length>0){
+                var tip = tipBuffer.splice(0,1)[0];
+                socket.emit("tip", {room: tip.room, message: tip.message, user: tip.user, tip: tip.tip});
+            }
     	}, 600);
-        function prize(){
+        function prize(prizeuser){
         	var prizeweight = Math.round(Math.random()*100);
+            console.log(prizeweight)
         	if(prizeweight < (100/3)){
         		//give the 0.5~0.6 prize
         		var prizeamount = ((Math.round(Math.random()*100))/1000)+0.5;
-        		socket.emit("tip", {user: data.user, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
+        		tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
         	}else if(prizeweight < 60){
     			//give the 0.6~0.7 prize
     			var prizeamount = ((Math.round(Math.random()*100))/1000)+0.6;
-    			socket.emit("tip", {user: data.user, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
+    			tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
         	}else if(prizeweight < 80){
     			//give the 0.7~0.8 prize
     			var prizeamount = ((Math.round(Math.random()*100))/1000)+0.7;
-    			socket.emit("tip", {user: data.user, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
+    			tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
         	}else if(prizeweight < (280/3)){
         		//give the 0.8~0.9 prize
         		var prizeamount = ((Math.round(Math.random()*100))/1000)+0.8;
-        		socket.emit("tip", {user: data.user, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
+        		tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
         	}else{
     			//give the 0.9~1 prize
     			var prizeamount = ((Math.round(Math.random()*100))/1000)+0.9;
-    			socket.emit("tip", {user: data.user, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
+    			tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
     		}
     	}
     });
