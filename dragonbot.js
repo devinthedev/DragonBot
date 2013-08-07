@@ -10,7 +10,7 @@ socket = io.connect("https://coinchat.org", {secure: true});
 var username = "DragonBot";
 var outputBuffer = [];
 var tipBuffer = [];
-var dragonhealth = 150;
+var dragonhealth = 125;
 var hero = "."
 var balance = 0
 socket.on('connect', function(){
@@ -26,7 +26,7 @@ socket.on('connect', function(){
 			socket.on('chat', function(data){ //the program loops this bracket
                 console.log(data);
 				if (data.message === "!rules" && data.room === "dragonbot") {
-        			outputBuffer.push({room: data.room, color: "000", message: data.user + ": Slay the dragon! The dragon initially has 150 health. Each swing reduces the health by a random amount between 0~100, and a 100 point swing instantly kills the dragon! Each swing is exactly 0.25 mBTC."});
+        			outputBuffer.push({room: data.room, color: "000", message: data.user + ": Slay the dragon! The dragon initially has 125 health. Each swing reduces the health by a random amount between 0~100, and a 100 point swing instantly kills the dragon! Each swing is exactly 0.25 mBTC."});
         		}
         		if (data.message === "!balance" && data.room === "dragonbot") {
 					socket.emit("getbalance", {});
