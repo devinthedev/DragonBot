@@ -47,7 +47,7 @@ socket.on('connect', function(){
 					var player = data.user;
 					if(amount === 0.25){
 						outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " takes a swing at the Dragon (" + dragonhealth + ") !"});
-						var swing = Math.round(Math.random()*100); //random number from 0 to 0.99999... multiply by 100 and round.
+						var swing = Math.ceil(Math.random()*100); //random number from 0 to 0.99999... multiply by 100 and round.
                         console.log(swing);
 						if(swing === 100){
 							dragonhealth = 150; //reset dragon's health
