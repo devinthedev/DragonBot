@@ -10,7 +10,7 @@ socket = io.connect("https://coinchat.org", {secure: true});
 var username = "DragonBot";
 var outputBuffer = [];
 var tipBuffer = [];
-var dragonhealth = 125;
+var dragonhealth = 100;
 var hero = "."
 var balance = 0
 socket.on('connect', function(){
@@ -86,19 +86,19 @@ socket.on('connect', function(){
         function prize(prizeuser){
         	var prizeweight = Math.round(Math.random()*100);
             console.log(prizeweight)
-        	if(prizeweight < (100/3)){
+        	if(prizeweight < (48)){
         		//give the 0.5~0.6 prize
         		var prizeamount = ((Math.round(Math.random()*100))/1000)+0.5;
         		tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
-        	}else if(prizeweight < 60){
+        	}else if(prizeweight < 80){
     			//give the 0.6~0.7 prize
     			var prizeamount = ((Math.round(Math.random()*100))/1000)+0.6;
     			tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
-        	}else if(prizeweight < 80){
+        	}else if(prizeweight < 93){
     			//give the 0.7~0.8 prize
     			var prizeamount = ((Math.round(Math.random()*100))/1000)+0.7;
-    			tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
-        	}else if(prizeweight < (280/3)){
+    			tipBuffer.push({user: prizeusser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
+        	}else if(prizeweight < (98)){
         		//give the 0.8~0.9 prize
         		var prizeamount = ((Math.round(Math.random()*100))/1000)+0.8;
         		tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
