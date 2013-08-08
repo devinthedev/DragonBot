@@ -18,7 +18,7 @@ var i = 0;
 socket.on('connect', function(){
 		//Your session key (aka API key)
 		//Get this from your browser's cookies.
-    socket.emit('login', {session: "TK7JIadiBtIHMISW7eZU97bHYYc0waPUaCS3dfIDnIAilX4TvnQaQ8LWxZAGXwI9"});
+    socket.emit('login', {session: "dHA9cOgVFEsUNWPCdsVcZVIUqN9sVgncWZhVoecmpNXT6IscjUisHdrECg8Wf1ch"});
     socket.on('loggedin', function(data){
     	username = data.username;
     	setTimeout(function(){
