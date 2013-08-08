@@ -18,7 +18,7 @@ var i = 0;
 socket.on('connect', function(){
 		//Your session key (aka API key)
 		//Get this from your browser's cookies.
-    socket.emit('login', {session: "dHA9cOgVFEsUNWPCdsVcZVIUqN9sVgncWZhVoecmpNXT6IscjUisHdrECg8Wf1ch"});
+    socket.emit('login', {session: "sK0QMtKeiyAxVEvGgEU1sSa3WyIGs28zppyHcaayFAOgcMXmfUyhAPvhZgCFmd79"});
     socket.on('loggedin', function(data){
     	username = data.username;
     	setTimeout(function(){
@@ -77,15 +77,15 @@ socket.on('connect', function(){
     	}, 600);
         function prize(prizeuser){
             var prizeamount = (Math.random() * 1.38) + 0.25;
-            if(prizeamount < 0.75){
-                i++;
-            }else{
-                i=0;
-            }
-            if(i === 3){
-                prizeamount = 1.25;
-                i = 0;
-            }
+            //if(prizeamount < 0.75){
+            //    i++;
+            //}else{
+            //    i=0;
+            //}
+            //if(i === 3){
+            //    prizeamount = 1.25;
+            //    i = 0;
+            //}
             tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"})
         	//var prizeweight = Math.round(Math.random()*100);
             //console.log(prizeweight)
