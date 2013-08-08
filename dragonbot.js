@@ -77,6 +77,15 @@ socket.on('connect', function(){
     	}, 600);
         function prize(prizeuser){
             var prizeamount = (Math.random() * 1.38) + 0.25;
+            if(prizeamount < 0.75){
+                i++;
+            }else{
+                i=0;
+            }
+            if(i === 3){
+                prizeamount = 1.25;
+                i = 0;
+            }
             tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"})
         	//var prizeweight = Math.round(Math.random()*100);
             //console.log(prizeweight)
