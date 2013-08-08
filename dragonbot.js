@@ -1,6 +1,6 @@
 //DragonBot
 //In Progress jakedageek
-//latest version 0.1.0 8-7-13
+//latest version 0.1.1 8-8-13
 
 // CoinChat bot
 
@@ -10,7 +10,6 @@ socket = io.connect("https://coinchat.org", {secure: true});
 var username = "DragonBot";
 var outputBuffer = [];
 var tipBuffer = [];
-var users =[];
 var statichealth = 100;
 var dragonhealth = 100;
 var hero = ".";
@@ -52,9 +51,9 @@ socket.on('connect', function(){
                         console.log(swing);
 						dragonhealth = dragonhealth - swing;
 						if(dragonhealth <= 0){ //was the dragon killed?
-							dragonhealth = statichealth; //reset dragon's health
+							dragonhealth = statichealth + dragonhealth; //reset dragon's health
 							outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has swung and dealt " + swing + " damage, killing the dragon!"}); //notify
-							prize(); give prize
+							prize(data.user); give prize
 						}else{
 							//state current health if dragon not killed
 							outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has swung and dealt " + swing + " damage, and the dragon now has " + dragonhealth + " health left!"});
@@ -76,8 +75,9 @@ socket.on('connect', function(){
                 socket.emit("chat", {room: chat.room, message: chat.message, color: "000"});
             }
     	}, 600);
-        function prize(){
-            Math.ceil(Math.random()*100)
+        function prize(prizeuser){
+            var prizeamount = (Math.random() * 1.38) + 0.25;
+            tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"})
         	//var prizeweight = Math.round(Math.random()*100);
             //console.log(prizeweight)
         	//if(prizeweight < (56)){
