@@ -25,6 +25,11 @@ socket.on('connect', function(){
 			socket.emit("getcolors", {});
 			socket.emit('joinroom', {join: 'dragonbot'});
 			socket.emit("getbalance", {});
+            socket.on('balance', function(data){
+                if(typeof data.balance !== 'undefined'){
+                    balance = data.balance
+                }
+            }
 			socket.on('chat', function(data){ //the program loops this bracket
 				if (data.message === "!rules" && data.room === "dragonbot") {
                     outputBuffer.push({room: data.room, color: "000", message: data.user + ": Slay the dragon! The dragon initially has 100 health. Each swing reduces the health by a random amount between 1~50! Each swing is exactly 0.25 mBTC. When you kill the dragon, you can get a prize of anywhere from 0.25~1.63 mBTC! Damage rolls over; if you swing a 50 on a dragon with 25 health, the next dragon will only have 75 health!"});
@@ -57,10 +62,12 @@ socket.on('connect', function(){
 						}else{
 							//state current health if dragon not killed
 							outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has swung and dealt " + swing + " damage, and the dragon now has " + dragonhealth + " health left!"});
+                            socket.emit("balance", {});
 						}
 					}else{
 						var refamount = amount * 0.98;
 						tipBuffer.push({user: data.user, room: "dragonbot", tip: refamount, message: "refund! A hit costs exactly 0.25"});
+                        socket.emit("balance", {});
 					}
 				}
 			});
@@ -87,6 +94,7 @@ socket.on('connect', function(){
             //    i = 0;
             //}
             tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"})
+            socket.emit("balance", {});
         	//var prizeweight = Math.round(Math.random()*100);
             //console.log(prizeweight)
         	//if(prizeweight < (56)){
