@@ -48,19 +48,16 @@ socket.on('connect', function(){
                     amount = Number(stringamount);
 					var player = data.user;
 					if(amount === 0.25){
-						var swing = Math.ceil(Math.random()*100); //random number from 0 to 0.99999... multiply by 100 and round.
+						var swing = Math.ceil((Math.random()*100)/2); //random number from 1 to 50
                         console.log(swing);
 						dragonhealth = dragonhealth - swing;
-                        users.push(player)
-						outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has swung and dealt " + swing + " damage!"});
 						if(dragonhealth <= 0){ //was the dragon killed?
 							dragonhealth = statichealth; //reset dragon's health
-							outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has killed the dragon!"}); //notify
-							var prizeamount = prize(); //calculate prize value
-                            var numusers = users.length /////////////////////////////////////////
+							outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has swung and dealt " + swing + " damage, killing the dragon!"}); //notify
+							prize(); give prize
 						}else{
 							//state current health if dragon not killed
-							outputBuffer.push({room: "dragonbot", color: "000", message: "The dragon now has " + dragonhealth + " health left!"});
+							outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has swung and dealt " + swing + " damage, and the dragon now has " + dragonhealth + " health left!"});
 						}
 					}else{
 						var refamount = amount * 0.98;
@@ -80,30 +77,31 @@ socket.on('connect', function(){
             }
     	}, 600);
         function prize(){
-        	var prizeweight = Math.round(Math.random()*100);
-            console.log(prizeweight)
-        	if(prizeweight < (56)){
-        		//give the 0.5~0.6 prize
-        		var prizeamount = ((Math.round(Math.random()*100))/1000)+0.5;
-        		//tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
-        	}else if(prizeweight < 83){
-    			//give the 0.6~0.7 prize
-    			var prizeamount = ((Math.round(Math.random()*100))/1000)+0.6;
-    			//tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
-        	}else if(prizeweight < 97){
-    			//give the 0.7~0.8 prize
-    			var prizeamount = ((Math.round(Math.random()*100))/1000)+0.7;
-    			//tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
-        	}else if(prizeweight < (99)){
-        		//give the 0.8~0.9 prize
-        		var prizeamount = ((Math.round(Math.random()*100))/1000)+0.8;
-        		//tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
-        	}else{
-    			//give the 0.9~1 prize
-    			var prizeamount = ((Math.round(Math.random()*100))/1000)+0.9;
-    			//tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
-    		}
-            return prizeamount;
+            Math.ceil(Math.random()*100)
+        	//var prizeweight = Math.round(Math.random()*100);
+            //console.log(prizeweight)
+        	//if(prizeweight < (56)){
+        	//	//give the 0.5~0.6 prize
+        	//	var prizeamount = ((Math.round(Math.random()*100))/1000)+0.5;
+        	//	tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
+        	//}else if(prizeweight < 83){
+    		//	//give the 0.6~0.7 prize
+    		//	var prizeamount = ((Math.round(Math.random()*100))/1000)+0.6;
+    		//	tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
+        	//}else if(prizeweight < 97){
+    		//	//give the 0.7~0.8 prize
+    		//	var prizeamount = ((Math.round(Math.random()*100))/1000)+0.7;
+    		//	tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
+        	//}else if(prizeweight < (99)){
+        	//	//give the 0.8~0.9 prize
+        	//	var prizeamount = ((Math.round(Math.random()*100))/1000)+0.8;
+        	//	tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
+        	//}else{
+    		//	//give the 0.9~1 prize
+    		//	var prizeamount = ((Math.round(Math.random()*100))/1000)+0.9;
+    		//	tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
+    		//}
+            //return prizeamount;
     	}
     });
     socket.on('disconnect', function(){});
