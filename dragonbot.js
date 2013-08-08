@@ -27,7 +27,7 @@ socket.on('connect', function(){
 			socket.emit("getbalance", {});
 			socket.on('chat', function(data){ //the program loops this bracket
 				if (data.message === "!rules" && data.room === "dragonbot") {
-        			outputBuffer.push({room: data.room, color: "000", message: data.user + ": Slay the dragon! The dragon initially has 100 health. Each swing reduces the health by a random amount between 1~100, and a 100 point swing instantly kills the dragon! Each swing is exactly 0.25 mBTC. When you kill the dragon, you can get a prize of anywhere from 0.5~1mBTC (weighted)! If you roll a 100 for the first swing, you get 1mBTC! House Edge: 4.2% (includes tax)"});
+                    outputBuffer.push({room: data.room, color: "000", message: data.user + ": Slay the dragon! The dragon initially has 100 health. Each swing reduces the health by a random amount between 1~50! Each swing is exactly 0.25 mBTC. When you kill the dragon, you can get a prize of anywhere from 0.25~1.63 mBTC! Damage rolls over; if you swing a 50 on a dragon with 25 health, the next dragon will only have 75 health!"});
         		}
         		if (data.message === "!balance" && data.room === "dragonbot") {
 					socket.emit("getbalance", {});
@@ -53,7 +53,7 @@ socket.on('connect', function(){
 						if(dragonhealth <= 0){ //was the dragon killed?
 							dragonhealth = statichealth + dragonhealth; //reset dragon's health
 							outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has swung and dealt " + swing + " damage, killing the dragon!"}); //notify
-							prize(data.user); give prize
+							prize(data.user); //give prize
 						}else{
 							//state current health if dragon not killed
 							outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has swung and dealt " + swing + " damage, and the dragon now has " + dragonhealth + " health left!"});
