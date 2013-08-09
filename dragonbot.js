@@ -32,7 +32,7 @@ socket.on('connect', function(){
             });
 			socket.on('chat', function(data){ //the program loops this bracket
 				if (data.message === "!rules" && data.room === "dragonbot") {
-                    outputBuffer.push({room: data.room, color: "000", message: data.user + ": Slay the dragon! The dragon initially has 100 health. Each swing reduces the health by a random amount between 1~50! Each swing is exactly 0.25 mBTC. When you kill the dragon, you can get a prize of anywhere from 0.25~1.63 mBTC! Damage rolls over; if you swing a 50 on a dragon with 25 health, the next dragon will only have 75 health!"});
+                    outputBuffer.push({room: data.room, color: "000", message: data.user + ": Slay the dragon! The dragon initially has 100 health. Each swing reduces the health by a random amount between 1~50! Each swing is exactly 0.25 mBTC. When you kill the dragon, you can get a prize of anywhere from 0.25~1.63 mBTC! Damage rolls over; if you swing a 50 on a dragon with 25 health, the next dragon will only have 75 health! Be careful of kill steals! You can tip any multiple of 0.25 and it will swing accordingly."});
         		}
         		if (data.message === "!balance" && data.room === "dragonbot") {
                     socket.emit("getbalance", {});
@@ -53,22 +53,25 @@ socket.on('connect', function(){
                 }
 				if(contains(data.message, ["<span class='label label-success'>has tipped " + username])){
                     var stringamount = data.message.split("<span class='label label-success'>has tipped ")[1].split(" ")[1];
-                    amount = Number(stringamount);
+                    var amount = Number(stringamount);
 					var player = data.user;
-					if(amount === 0.25){
-						var swing = Math.ceil((Math.random()*100)/2); //random number from 1 to 50
-                        console.log(swing);
-						dragonhealth = dragonhealth - swing;
-						if(dragonhealth <= 0){ //was the dragon killed?
-							dragonhealth = statichealth + dragonhealth; //reset dragon's health
-							outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has swung and dealt " + swing + " damage, killing the dragon!"}); //notify
-							prize(data.user); //give prize
-						}else{
-							//state current health if dragon not killed
-							outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has swung and dealt " + swing + " damage, and the dragon now has " + dragonhealth + " health left!"});
-                            socket.emit("getbalance", {});
-						}
-					}else{
+					if(amount % 0.25 === 0){ //is it a mutliple of 0.25?
+                        var numtip = amount / 0.25; //yes. how many swings?
+                        for (var i = 0;i <= numtip;i++){ //loop the swing mech "numptip" times.
+                            var swing = Math.ceil((Math.random()*100)/2); //random number from 1 to 50
+                            console.log(swing);
+                            dragonhealth = dragonhealth - swing;
+                            if(dragonhealth <= 0){ //was the dragon killed?
+                                dragonhealth = statichealth + dragonhealth; //reset dragon's health
+                                outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has swung and dealt " + swing + " damage, killing the dragon!"}); //notify
+                                prize(data.user); //give prize
+                            }else{
+                                //state current health if dragon not killed
+                                outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has swung and dealt " + swing + " damage, and the dragon now has " + dragonhealth + " health left!"});
+                                socket.emit("getbalance", {});
+                            }    
+                        }
+					}else{ //not a multiple of 0.25
 						var refamount = amount * 0.98;
 						tipBuffer.push({user: data.user, room: "dragonbot", tip: refamount, message: "refund! A hit costs exactly 0.25"});
                         socket.emit("balance", {});
