@@ -18,18 +18,18 @@ var i = 0;
 socket.on('connect', function(){
 		//Your session key (aka API key)
 		//Get this from your browser's cookies.
-    socket.emit('login', {session: "sK0QMtKeiyAxVEvGgEU1sSa3WyIGs28zppyHcaayFAOgcMXmfUyhAPvhZgCFmd79"});
+    socket.emit('login', {session: "tv7XlwL7oQ5ZfsW0p6jVpWC0yPeYh5AjPIJhkdaCF3orMiwgx4TFU68bClWqkAUs"});
     socket.on('loggedin', function(data){
     	username = data.username;
     	setTimeout(function(){
 			socket.emit("getcolors", {});
 			socket.emit('joinroom', {join: 'dragonbot'});
-			socket.emit("getbalance", {});
+            socket.emit("getbalance", {});
             socket.on('balance', function(data){
                 if(typeof data.balance !== 'undefined'){
-                    balance = data.balance
+                    balance = data.balance;
                 }
-            }
+            });
 			socket.on('chat', function(data){ //the program loops this bracket
 				if (data.message === "!rules" && data.room === "dragonbot") {
                     outputBuffer.push({room: data.room, color: "000", message: data.user + ": Slay the dragon! The dragon initially has 100 health. Each swing reduces the health by a random amount between 1~50! Each swing is exactly 0.25 mBTC. When you kill the dragon, you can get a prize of anywhere from 0.25~1.63 mBTC! Damage rolls over; if you swing a 50 on a dragon with 25 health, the next dragon will only have 75 health!"});
@@ -61,7 +61,7 @@ socket.on('connect', function(){
 						}else{
 							//state current health if dragon not killed
 							outputBuffer.push({room: "dragonbot", color: "000", message: data.user + " has swung and dealt " + swing + " damage, and the dragon now has " + dragonhealth + " health left!"});
-                            socket.emit("balance", {});
+                            socket.emit("getbalance", {});
 						}
 					}else{
 						var refamount = amount * 0.98;
@@ -71,6 +71,9 @@ socket.on('connect', function(){
 				}
 			});
 		}, 1500);
+        setInterval(function(){
+            dragonhealth = dragonhealth - 3;
+        },600000);
     	setInterval(function(){
     		//CoinChat has a 550ms anti spam prevention. You can't send a chat message more than once every 550ms.
     		if(tipBuffer.length>0){
@@ -93,7 +96,7 @@ socket.on('connect', function(){
             //    i = 0;
             //}
             tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"})
-            socket.emit("balance", {});
+            socket.emit("getbalance", {});
         	//var prizeweight = Math.round(Math.random()*100);
             //console.log(prizeweight)
         	//if(prizeweight < (56)){
