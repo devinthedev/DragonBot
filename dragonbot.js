@@ -35,6 +35,11 @@ socket.on('connect', function(){
                     outputBuffer.push({room: data.room, color: "000", message: data.user + ": Slay the dragon! The dragon initially has 100 health. Each swing reduces the health by a random amount between 1~50! Each swing is exactly 0.25 mBTC. When you kill the dragon, you can get a prize of anywhere from 0.25~1.63 mBTC! Damage rolls over; if you swing a 50 on a dragon with 25 health, the next dragon will only have 75 health!"});
         		}
         		if (data.message === "!balance" && data.room === "dragonbot") {
+                    socket.emit("getbalance", {});
+                    socket.emit("getbalance", {});
+                    socket.emit("getbalance", {});
+                    socket.emit("getbalance", {});
+                    socket.emit("getbalance", {});
 					outputBuffer.push({room: data.room, color: "000", message: data.user + ": current balance of bot = " + balance});
         		}
         		if (data.message === "!health" && data.room === "dragonbot") {
@@ -71,9 +76,9 @@ socket.on('connect', function(){
 				}
 			});
 		}, 1500);
-        setInterval(function(){
-            dragonhealth = dragonhealth - 1;
-        },600000);
+        //setInterval(function(){
+        //    dragonhealth = dragonhealth - 1;
+        //},600000);
     	setInterval(function(){
     		//CoinChat has a 550ms anti spam prevention. You can't send a chat message more than once every 550ms.
     		if(tipBuffer.length>0){
