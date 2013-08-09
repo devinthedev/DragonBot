@@ -57,7 +57,7 @@ socket.on('connect', function(){
 					var player = data.user;
 					if(amount % 0.25 === 0){ //is it a mutliple of 0.25?
                         var numtip = amount / 0.25; //yes. how many swings?
-                        for (var i = 0;i <= numtip;i++){ //loop the swing mech "numptip" times.
+                        for (var i = 0;i < numtip;i++){ //loop the swing mech "numptip" times.
                             var swing = Math.ceil((Math.random()*100)/2); //random number from 1 to 50
                             console.log(swing);
                             dragonhealth = dragonhealth - swing;
