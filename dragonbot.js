@@ -9,7 +9,6 @@ socket = io.connect("https://coinchat.org", {secure: true});
 
 var username = "DragonBot";
 var outputBuffer = [];
-var tipBuffer = [];
 var statichealth = 100;
 var dragonhealth = 94;
 var hero = ".";
@@ -73,7 +72,7 @@ socket.on('connect', function(){
                         }
 					}else{ //not a multiple of 0.25
 						var refamount = amount * 0.98;
-						tipBuffer.push({user: data.user, room: "dragonbot", tip: refamount, message: "refund! A hit costs exactly 0.25"});
+                        tip("dragonbot", data.user, refamount, "refund! A tip needs to be a multiple of 0.25.")
                         socket.emit("balance", {});
 					}
 				}
@@ -84,14 +83,26 @@ socket.on('connect', function(){
         //},600000);
     	setInterval(function(){
     		//CoinChat has a 550ms anti spam prevention. You can't send a chat message more than once every 550ms.
-    		if(tipBuffer.length>0){
-                var tip = tipBuffer.splice(0,1)[0];
-                socket.emit("tip", {room: tip.room, message: tip.message, user: tip.user, tip: tip.tip});
-            }else if(outputBuffer.length > 0){
-                var chat = outputBuffer.splice(0,1)[0];
-                socket.emit("chat", {room: chat.room, message: chat.message, color: "000"});
-            }
+            if(outputBuffer.length > 0){ 
+                if(outputBuffer[0].tipObj){ 
+                    socket.emit("tip", outputBuffer.splice(0,1)[0].tipObj); 
+                } else{ 
+                    var chat = outputBuffer.splice(0,1)[0]; 
+                    socket.emit("chat", {room: chat.room, message: chat.message, color: "000"}); 
+                } 
+            } 
+    		//if(tipBuffer.length>0){
+            //   var tip = tipBuffer.splice(0,1)[0];
+            //    socket.emit("tip", {room: tip.room, message: tip.message, user: tip.user, tip: tip.tip});
+            //}else if(outputBuffer.length > 0){
+            //    var chat = outputBuffer.splice(0,1)[0];
+            //    socket.emit("chat", {room: chat.room, message: chat.message, color: "000"});
+            //}
     	}, 600);
+        function tip(roomName, userName, amount, note){ 
+            outputBuffer.push({tipObj: {user: userName, room: roomName, tip: amount, message: note}
+            }); 
+        }
         function prize(prizeuser){
             var prizeamount = (Math.random() * 1.38) + 0.25;
             //if(prizeamount < 0.75){
@@ -103,7 +114,8 @@ socket.on('connect', function(){
             //    prizeamount = 1.25;
             //    i = 0;
             //}
-            tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"})
+            tip("dragonbot", prizeuser, prizeamount, "DragonBot Prize!");
+            //tipBuffer.push({user: prizeuser, room: "dragonbot", tip: prizeamount, message: "DragonBot Prize"});
             socket.emit("getbalance", {});
         	//var prizeweight = Math.round(Math.random()*100);
             //console.log(prizeweight)
