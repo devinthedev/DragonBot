@@ -5,7 +5,7 @@
 // CoinChat bot
 
 var io = require('socket.io-client');
-socket = io.connect("https://coinchat.org", {secure: true});
+socket = io.connect("https://coinchat.org", {secure: true reconnect: false});
 
 var username = "DragonBot";
 var outputBuffer = [];
