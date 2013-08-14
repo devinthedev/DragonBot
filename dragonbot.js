@@ -50,6 +50,10 @@ socket.on('connect', function(){
                 if (data.message === "!nom" && data.room === "dragonbot") {
                     outputBuffer.push({room: data.room, color: "000", message: "/me noms " + data.user});
                 }
+                if (data.message === "!disconnect" && data.room === "dragonbot") {
+                    socket.disconnect();
+                    exit();
+                }
 				if(contains(data.message, ["<span class='label label-success'>has tipped " + username])){
                     var stringamount = data.message.split("<span class='label label-success'>has tipped ")[1].split(" ")[1];
                     var amount = Number(stringamount);
