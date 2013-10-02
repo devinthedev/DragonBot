@@ -47,6 +47,9 @@ socket.on('connect', function(){
                 if (data.message === "!commands" && data.room === "dragonbot") {
                     outputBuffer.push({room: data.room, color: "000", message: data.user + ": !rules, !nom, !health, !commands"});
                 }
+                if(contains(data.message, ["<span class='label label-success'>has tipped " + username, "donation"])){
+	            outputBuffer.push({room: data.room, color: "000", message: "Thank you for the tip, " + data.user + "!"})
+           	}
                 if (data.message === "!nom" && data.room === "dragonbot") {
                     outputBuffer.push({room: data.room, color: "000", message: "/me noms " + data.user});
                 }
